@@ -1,0 +1,20 @@
+[versions]
+errorprone = "2.48.0"
+nullaway = "0.13.1"
+qpid-jms = "2.10.0"
+spring-boot = "4.0.3"
+
+[libraries]
+assertj-core = { module = "org.assertj:assertj-core" }
+errorprone = { module = "com.google.errorprone:error_prone_core", version.ref = "errorprone" }
+jspecify = { module = "org.jspecify:jspecify" }
+log4j-api = { module = "org.apache.logging.log4j:log4j-api" }
+mockito-core = { module = "org.mockito:mockito-core" }
+nullaway = { module = "com.uber.nullaway:nullaway", version.ref = "nullaway" }
+qpid-jms-client = { module = "org.apache.qpid:qpid-jms-client", version.ref = "qpid-jms" }
+spring-boot-configuration-processor = { module = "org.springframework.boot:spring-boot-configuration-processor" }
+spring-boot-dependencies = { module = "org.springframework.boot:spring-boot-dependencies", version.ref = "spring-boot" }
+spring-boot-starter-jms = { module = "org.springframework.boot:spring-boot-starter-jms" }
+spring-boot-starter-jms-test = { module = "org.springframework.boot:spring-boot-starter-jms-test" }
+spring-boot-starter-webmvc = { module = "org.springframework.boot:spring-boot-starter-webmvc" }
+spring-boot-starter-webmvc-test = { module = "org.springframework.boot:spring-boot-starter-webmvc-test" }
