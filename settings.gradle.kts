@@ -19,5 +19,6 @@ includeBuild("build-logic")
 
 include("sample-consumer")
 include("sample-producer")
+include("spring-boot-qpidjms")
 
 enableFeaturePreview("STABLE_CONFIGURATION_CACHE")

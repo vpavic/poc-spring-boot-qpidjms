@@ -1,3 +1,11 @@
 spring:
   application:
     name: sample-consumer
+---
+spring:
+  config:
+    activate:
+      on-profile: azure-servicebus
+  qpidjms:
+    username: RootManageSharedAccessKey
+    password: SAS_KEY_VALUE

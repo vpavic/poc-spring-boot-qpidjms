@@ -3,7 +3,7 @@ plugins {
 }
 
 dependencies {
-	implementation(libs.qpid.jms.client)
+	implementation(project(":spring-boot-qpidjms"))
 	implementation(libs.spring.boot.starter.jms)
 }
 
