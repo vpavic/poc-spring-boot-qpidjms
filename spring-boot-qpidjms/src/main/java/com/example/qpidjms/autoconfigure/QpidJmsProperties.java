@@ -4,6 +4,8 @@ import java.net.URI;
 
 import org.jspecify.annotations.Nullable;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.context.properties.NestedConfigurationProperty;
+import org.springframework.boot.jms.autoconfigure.JmsPoolConnectionFactoryProperties;
 
 @ConfigurationProperties("spring.qpidjms")
 public class QpidJmsProperties {
@@ -13,6 +15,9 @@ public class QpidJmsProperties {
 	private @Nullable String username;
 
 	private @Nullable String password;
+
+	@NestedConfigurationProperty
+	private final JmsPoolConnectionFactoryProperties pool = new JmsPoolConnectionFactoryProperties();
 
 	public URI getBrokerUrl() {
 		return this.brokerUrl;
@@ -36,6 +41,10 @@ public class QpidJmsProperties {
 
 	public void setPassword(@Nullable String password) {
 		this.password = password;
+	}
+
+	public JmsPoolConnectionFactoryProperties getPool() {
+		return this.pool;
 	}
 
 }

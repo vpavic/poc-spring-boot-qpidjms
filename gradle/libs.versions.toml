@@ -11,6 +11,7 @@ jspecify = { module = "org.jspecify:jspecify" }
 log4j-api = { module = "org.apache.logging.log4j:log4j-api" }
 mockito-core = { module = "org.mockito:mockito-core" }
 nullaway = { module = "com.uber.nullaway:nullaway", version.ref = "nullaway" }
+pooled-jms = { module = "org.messaginghub:pooled-jms" }
 qpid-jms-client = { module = "org.apache.qpid:qpid-jms-client", version.ref = "qpid-jms" }
 spring-boot-autoconfigure = { module = "org.springframework.boot:spring-boot-autoconfigure", version.ref = "spring-boot" }
 spring-boot-configuration-processor = { module = "org.springframework.boot:spring-boot-configuration-processor" }
