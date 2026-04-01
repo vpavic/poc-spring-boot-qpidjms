@@ -1,6 +1,10 @@
 spring:
   application:
     name: sample-producer
+  jms:
+    template:
+      session:
+        acknowledge-mode: '101'
 ---
 spring:
   config:
