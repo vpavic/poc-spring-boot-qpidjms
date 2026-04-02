@@ -11,4 +11,9 @@ dependencies {
 	compileOnly(libs.pooled.jms) {
 		exclude(group = "org.apache.geronimo.specs", module = "geronimo-jms_2.0_spec")
 	}
+
+	testImplementation(libs.spring.boot.test)
+	testImplementation(libs.pooled.jms) {
+		exclude(group = "org.apache.geronimo.specs", module = "geronimo-jms_2.0_spec")
+	}
 }
