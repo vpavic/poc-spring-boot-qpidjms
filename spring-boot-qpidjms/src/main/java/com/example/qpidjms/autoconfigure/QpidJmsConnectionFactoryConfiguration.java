@@ -4,6 +4,7 @@ import jakarta.jms.ConnectionFactory;
 import org.apache.commons.pool2.PooledObject;
 import org.apache.qpid.jms.JmsConnectionFactory;
 import org.messaginghub.pooled.jms.JmsPoolConnectionFactory;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBooleanProperty;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -17,9 +18,12 @@ import org.springframework.jms.connection.CachingConnectionFactory;
 @ConditionalOnMissingBean(ConnectionFactory.class)
 class QpidJmsConnectionFactoryConfiguration {
 
-	private static JmsConnectionFactory createJmsConnectionFactory(QpidJmsConnectionDetails connectionDetails) {
-		return new JmsConnectionFactory(connectionDetails.getUsername(), connectionDetails.getPassword(),
-				connectionDetails.getBrokerUrl());
+	private static JmsConnectionFactory createJmsConnectionFactory(QpidJmsConnectionDetails connectionDetails,
+			ObjectProvider<QpidJmsConnectionFactoryCustomizer> connectionFactoryCustomizers) {
+		JmsConnectionFactory connectionFactory = new JmsConnectionFactory(connectionDetails.getUsername(),
+				connectionDetails.getPassword(), connectionDetails.getBrokerUrl());
+		connectionFactoryCustomizers.orderedStream().forEach(customizer -> customizer.customize(connectionFactory));
+		return connectionFactory;
 	}
 
 	@Configuration(proxyBeanMethods = false)
@@ -28,8 +32,9 @@ class QpidJmsConnectionFactoryConfiguration {
 
 		@Bean
 		@ConditionalOnBooleanProperty(name = "spring.jms.cache.enabled", havingValue = false)
-		JmsConnectionFactory jmsConnectionFactory(QpidJmsConnectionDetails connectionDetails) {
-			return createJmsConnectionFactory(connectionDetails);
+		JmsConnectionFactory jmsConnectionFactory(QpidJmsConnectionDetails connectionDetails,
+				ObjectProvider<QpidJmsConnectionFactoryCustomizer> connectionFactoryCustomizers) {
+			return createJmsConnectionFactory(connectionDetails, connectionFactoryCustomizers);
 		}
 
 		@Configuration(proxyBeanMethods = false)
@@ -39,10 +44,11 @@ class QpidJmsConnectionFactoryConfiguration {
 
 			@Bean
 			CachingConnectionFactory jmsConnectionFactory(JmsProperties jmsProperties,
-					QpidJmsConnectionDetails connectionDetails) {
+					QpidJmsConnectionDetails connectionDetails,
+					ObjectProvider<QpidJmsConnectionFactoryCustomizer> connectionFactoryCustomizers) {
 				JmsProperties.Cache cacheProperties = jmsProperties.getCache();
 				CachingConnectionFactory connectionFactory = new CachingConnectionFactory(
-						createJmsConnectionFactory(connectionDetails));
+						createJmsConnectionFactory(connectionDetails,  connectionFactoryCustomizers));
 				connectionFactory.setCacheConsumers(cacheProperties.isConsumers());
 				connectionFactory.setCacheProducers(cacheProperties.isProducers());
 				connectionFactory.setSessionCacheSize(cacheProperties.getSessionCacheSize());
@@ -60,8 +66,10 @@ class QpidJmsConnectionFactoryConfiguration {
 
 		@Bean(destroyMethod = "stop")
 		JmsPoolConnectionFactory jmsConnectionFactory(QpidJmsProperties properties,
-				QpidJmsConnectionDetails connectionDetails) {
-			JmsConnectionFactory connectionFactory = createJmsConnectionFactory(connectionDetails);
+				QpidJmsConnectionDetails connectionDetails,
+				ObjectProvider<QpidJmsConnectionFactoryCustomizer> connectionFactoryCustomizers) {
+			JmsConnectionFactory connectionFactory =
+					createJmsConnectionFactory(connectionDetails, connectionFactoryCustomizers);
 			return new JmsPoolConnectionFactoryFactory(properties.getPool())
 					.createPooledConnectionFactory(connectionFactory);
 		}
