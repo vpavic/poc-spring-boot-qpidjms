@@ -4,7 +4,6 @@ import java.net.URI;
 
 import jakarta.jms.ConnectionFactory;
 import org.apache.qpid.jms.JmsConnectionFactory;
-import org.jspecify.annotations.NullUnmarked;
 import org.junit.jupiter.api.Test;
 import org.messaginghub.pooled.jms.JmsPoolConnectionFactory;
 import org.springframework.boot.autoconfigure.AutoConfigurations;
@@ -19,7 +18,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.mockingDetails;
 
-@NullUnmarked
 class QpidJmsAutoConfigurationTests {
 
 	final ApplicationContextRunner contextRunner = new ApplicationContextRunner()
