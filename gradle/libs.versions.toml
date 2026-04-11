@@ -1,6 +1,6 @@
 [versions]
 errorprone = "2.48.0"
-nullaway = "0.13.1"
+nullaway = "0.13.2"
 qpid-jms = "2.10.0"
 spring-boot = "4.0.5"
 
