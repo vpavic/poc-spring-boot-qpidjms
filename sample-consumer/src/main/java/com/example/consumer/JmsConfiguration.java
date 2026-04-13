@@ -14,20 +14,29 @@ class JmsConfiguration {
 
 	@Bean
 	DefaultJmsListenerContainerFactory queueJmsListenerContainerFactory(
-			DefaultJmsListenerContainerFactoryConfigurer configurer, ConnectionFactory connectionFactory) {
-		DefaultJmsListenerContainerFactory factory = new DefaultJmsListenerContainerFactory();
-		configurer.configure(factory, ConnectionFactoryUnwrapper.unwrapCaching(connectionFactory));
-		return factory;
+			DefaultJmsListenerContainerFactoryConfigurer jmsListenerContainerFactoryConfigurer,
+			ConnectionFactory jmsConnectionFactory) {
+		return createJmsListenerContainerFactory(jmsListenerContainerFactoryConfigurer, jmsConnectionFactory);
 	}
 
 	@Bean
 	DefaultJmsListenerContainerFactory topicJmsListenerContainerFactory(
-			DefaultJmsListenerContainerFactoryConfigurer configurer, ConnectionFactory connectionFactory) {
-		DefaultJmsListenerContainerFactory factory = new DefaultJmsListenerContainerFactory();
-		configurer.configure(factory, ConnectionFactoryUnwrapper.unwrapCaching(connectionFactory));
-		factory.setSubscriptionDurable(true);
-		factory.setClientId(UUID.randomUUID().toString());
-		return factory;
+			DefaultJmsListenerContainerFactoryConfigurer configurer, ConnectionFactory jmsConnectionFactory) {
+		DefaultJmsListenerContainerFactory jmsListenerContainerFactory =
+				createJmsListenerContainerFactory(configurer, jmsConnectionFactory);
+		jmsListenerContainerFactory.setSubscriptionDurable(true);
+		jmsListenerContainerFactory.setClientId(UUID.randomUUID().toString());
+		return jmsListenerContainerFactory;
+	}
+
+	private DefaultJmsListenerContainerFactory createJmsListenerContainerFactory(
+			DefaultJmsListenerContainerFactoryConfigurer jmsListenerContainerFactoryConfigurer,
+			ConnectionFactory jmsConnectionFactory) {
+		DefaultJmsListenerContainerFactory jmsListenerContainerFactory = new DefaultJmsListenerContainerFactory();
+		jmsListenerContainerFactoryConfigurer.configure(jmsListenerContainerFactory,
+				ConnectionFactoryUnwrapper.unwrapCaching(jmsConnectionFactory));
+		jmsListenerContainerFactory.setSessionAcknowledgeMode(101);
+		return jmsListenerContainerFactory;
 	}
 
 }

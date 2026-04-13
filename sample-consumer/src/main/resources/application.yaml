@@ -1,10 +1,6 @@
 spring:
   application:
     name: sample-consumer
-  jms:
-    listener:
-      session:
-        acknowledge-mode: '101'
 ---
 spring:
   config:
