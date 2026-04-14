@@ -21,15 +21,16 @@ class JmsConfiguration {
 
 	@Bean
 	DefaultJmsListenerContainerFactory topicJmsListenerContainerFactory(
-			DefaultJmsListenerContainerFactoryConfigurer configurer, ConnectionFactory jmsConnectionFactory) {
+			DefaultJmsListenerContainerFactoryConfigurer jmsListenerContainerFactoryConfigurer,
+			ConnectionFactory jmsConnectionFactory) {
 		DefaultJmsListenerContainerFactory jmsListenerContainerFactory =
-				createJmsListenerContainerFactory(configurer, jmsConnectionFactory);
+				createJmsListenerContainerFactory(jmsListenerContainerFactoryConfigurer, jmsConnectionFactory);
 		jmsListenerContainerFactory.setSubscriptionDurable(true);
 		jmsListenerContainerFactory.setClientId(UUID.randomUUID().toString());
 		return jmsListenerContainerFactory;
 	}
 
-	private DefaultJmsListenerContainerFactory createJmsListenerContainerFactory(
+	private static DefaultJmsListenerContainerFactory createJmsListenerContainerFactory(
 			DefaultJmsListenerContainerFactoryConfigurer jmsListenerContainerFactoryConfigurer,
 			ConnectionFactory jmsConnectionFactory) {
 		DefaultJmsListenerContainerFactory jmsListenerContainerFactory = new DefaultJmsListenerContainerFactory();
