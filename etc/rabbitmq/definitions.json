@@ -1,0 +1,47 @@
+{
+  "users": [
+    {
+      "name": "guest",
+      "password_hash": "/UWlSVMHOhYjzAr4SSg1QTA5PNse+uYJfDK2mb2q4bwHfy9Y",
+      "tags": ["administrator"]
+    }
+  ],
+  "vhosts": [
+    {
+      "name": "/"
+    }
+  ],
+  "permissions": [
+    {
+      "user": "guest",
+      "vhost": "/",
+      "configure": ".*",
+      "write": ".*",
+      "read": ".*"
+    }
+  ],
+  "queues": [
+    {
+      "name": "sample.queue",
+      "vhost": "/",
+      "durable": true
+    }
+  ],
+  "exchanges": [
+    {
+      "name": "sample.exchange",
+      "vhost": "/",
+      "type": "direct",
+      "durable": true,
+      "auto_delete": false
+    }
+  ],
+  "bindings": [
+    {
+      "vhost": "/",
+      "source": "sample.exchange",
+      "destination": "sample.queue",
+      "destination_type": "queue"
+    }
+  ]
+}

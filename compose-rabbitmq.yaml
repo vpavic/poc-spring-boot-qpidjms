@@ -1,0 +1,10 @@
+name: rabbitmq
+services:
+  rabbitmq:
+    image: rabbitmq:4.2.5-management-alpine
+    volumes:
+      - ./etc/rabbitmq/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf
+      - ./etc/rabbitmq/definitions.json:/etc/rabbitmq/definitions.json
+    ports:
+      - ${RABBITMQ_AMQP_PORT:-5672}:5672
+      - ${RABBITMQ_MANAGEMENT_PORT:-15672}:15672

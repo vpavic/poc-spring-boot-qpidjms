@@ -16,3 +16,11 @@ spring:
   qpidjms:
     username: RootManageSharedAccessKey
     password: SAS_KEY_VALUE
+---
+spring:
+  config:
+    activate:
+      on-profile: rabbitmq
+  qpidjms:
+    username: guest
+    password: guest
