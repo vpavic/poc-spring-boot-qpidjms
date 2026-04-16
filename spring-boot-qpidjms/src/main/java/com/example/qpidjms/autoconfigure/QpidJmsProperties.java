@@ -10,7 +10,7 @@ import org.springframework.boot.jms.autoconfigure.JmsPoolConnectionFactoryProper
 @ConfigurationProperties("spring.qpidjms")
 public class QpidJmsProperties {
 
-	private URI brokerUrl = URI.create("amqp://localhost:5672");
+	private @Nullable URI brokerUrl;
 
 	private @Nullable String username;
 
@@ -19,7 +19,7 @@ public class QpidJmsProperties {
 	@NestedConfigurationProperty
 	private final JmsPoolConnectionFactoryProperties pool = new JmsPoolConnectionFactoryProperties();
 
-	public URI getBrokerUrl() {
+	public @Nullable URI getBrokerUrl() {
 		return this.brokerUrl;
 	}
 

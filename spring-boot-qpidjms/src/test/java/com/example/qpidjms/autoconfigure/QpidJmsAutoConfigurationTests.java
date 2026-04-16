@@ -21,34 +21,20 @@ import static org.mockito.Mockito.mockingDetails;
 class QpidJmsAutoConfigurationTests {
 
 	final ApplicationContextRunner contextRunner = new ApplicationContextRunner()
-		.withConfiguration(AutoConfigurations.of(QpidJmsAutoConfiguration.class, JmsAutoConfiguration.class));
+			.withConfiguration(AutoConfigurations.of(QpidJmsAutoConfiguration.class, JmsAutoConfiguration.class));
 
 	@Test
-	void defaultCachedConnectionFactoryConfiguration() {
+	void defaultNoConnectionFactoryConfiguration() {
 		this.contextRunner.withUserConfiguration(EmptyConfiguration.class)
-				.run(context -> {
-					assertThat(context)
-							.hasSingleBean(CachingConnectionFactory.class)
-							.hasBean("jmsConnectionFactory")
-							.hasSingleBean(QpidJmsAutoConfiguration.PropertiesQpidJmsConnectionDetails.class);
-					CachingConnectionFactory connectionFactory = context.getBean(CachingConnectionFactory.class);
-					assertThat(context.getBean("jmsConnectionFactory")).isSameAs(connectionFactory);
-					assertThat(connectionFactory.getTargetConnectionFactory())
-							.isInstanceOfSatisfying(JmsConnectionFactory.class, targetConnectionFactory -> {
-								assertThat(targetConnectionFactory.getRemoteURI()).isEqualTo("amqp://localhost:5672");
-								assertThat(targetConnectionFactory.getUsername()).isNull();
-								assertThat(targetConnectionFactory.getPassword()).isNull();
-							});
-					assertThat(connectionFactory.isCacheConsumers()).isFalse();
-					assertThat(connectionFactory.isCacheProducers()).isTrue();
-					assertThat(connectionFactory.getSessionCacheSize()).isOne();
-				});
+				.run(context -> assertThat(context)
+						.doesNotHaveBean(ConnectionFactory.class)
+						.doesNotHaveBean("jmsConnectionFactory"));
 	}
 
 	@Test
-	void customCachedConnectionFactoryConfiguration() {
+	void cachedConnectionFactoryConfiguration() {
 		this.contextRunner.withUserConfiguration(EmptyConfiguration.class)
-				.withPropertyValues("spring.qpidjms.brokerUrl=amqp://127.0.0.1:5672",
+				.withPropertyValues("spring.qpidjms.brokerUrl=amqp://localhost:5672",
 						"spring.qpidjms.username=username", "spring.qpidjms.password=password",
 						"spring.jms.cache.consumers=true", "spring.jms.cache.producers=false",
 						"spring.jms.cache.session-cache-size=10")
@@ -60,7 +46,7 @@ class QpidJmsAutoConfigurationTests {
 					assertThat(context.getBean("jmsConnectionFactory")).isSameAs(connectionFactory);
 					assertThat(connectionFactory.getTargetConnectionFactory())
 							.isInstanceOfSatisfying(JmsConnectionFactory.class, targetConnectionFactory -> {
-								assertThat(targetConnectionFactory.getRemoteURI()).isEqualTo("amqp://127.0.0.1:5672");
+								assertThat(targetConnectionFactory.getRemoteURI()).isEqualTo("amqp://localhost:5672");
 								assertThat(targetConnectionFactory.getUsername()).isEqualTo("username");
 								assertThat(targetConnectionFactory.getPassword()).isEqualTo("password");
 							});
@@ -71,13 +57,12 @@ class QpidJmsAutoConfigurationTests {
 	}
 
 	@Test
-	void defaultNonCachedConnectionFactoryConfiguration() {
+	void nonCachedConnectionFactoryConfiguration() {
 		this.contextRunner.withUserConfiguration(EmptyConfiguration.class)
-				.withPropertyValues("spring.jms.cache.enabled=false")
+				.withPropertyValues("spring.qpidjms.brokerUrl=amqp://localhost:5672", "spring.jms.cache.enabled=false")
 				.run(context -> {
 					assertThat(context)
 							.hasSingleBean(ConnectionFactory.class)
-							.hasSingleBean(JmsConnectionFactory.class)
 							.hasBean("jmsConnectionFactory");
 					JmsConnectionFactory connectionFactory = context.getBean(JmsConnectionFactory.class);
 					assertThat(context.getBean("jmsConnectionFactory")).isSameAs(connectionFactory);
@@ -90,6 +75,7 @@ class QpidJmsAutoConfigurationTests {
 	@Test
 	void customizerConnectionFactoryConfiguration() {
 		this.contextRunner.withUserConfiguration(CustomizerConfiguration.class)
+				.withPropertyValues("spring.qpidjms.brokerUrl=amqp://localhost:5672")
 				.run(context -> {
 					assertThat(context)
 							.hasSingleBean(CachingConnectionFactory.class)
@@ -98,26 +84,10 @@ class QpidJmsAutoConfigurationTests {
 					assertThat(context.getBean("jmsConnectionFactory")).isSameAs(connectionFactory);
 					assertThat(connectionFactory.getTargetConnectionFactory())
 							.isInstanceOfSatisfying(JmsConnectionFactory.class, targetConnectionFactory -> {
-								assertThat(targetConnectionFactory.getRemoteURI()).isEqualTo("amqp://127.0.0.1:5672");
+								assertThat(targetConnectionFactory.getRemoteURI()).isEqualTo("amqp://localhost:5672");
 								assertThat(targetConnectionFactory.getUsername()).isEqualTo("username");
 								assertThat(targetConnectionFactory.getPassword()).isEqualTo("password");
 							});
-				});
-	}
-
-	@Test
-	void customConnectionDetailsConnectionFactoryConfiguration() {
-		this.contextRunner.withClassLoader(new FilteredClassLoader(CachingConnectionFactory.class))
-				.withPropertyValues("spring.jms.cache.enabled=false")
-				.withUserConfiguration(TestConnectionDetailsConfiguration.class)
-				.run(context -> {
-					assertThat(context)
-							.hasSingleBean(QpidJmsConnectionDetails.class)
-							.doesNotHaveBean(QpidJmsAutoConfiguration.PropertiesQpidJmsConnectionDetails.class);
-					JmsConnectionFactory connectionFactory = context.getBean(JmsConnectionFactory.class);
-					assertThat(connectionFactory.getRemoteURI()).isEqualTo("amqp://127.0.0.1:5672");
-					assertThat(connectionFactory.getUsername()).isEqualTo("username");
-					assertThat(connectionFactory.getPassword()).isEqualTo("password");
 				});
 	}
 
@@ -128,13 +98,29 @@ class QpidJmsAutoConfigurationTests {
 	}
 
 	@Test
+	void customConnectionDetailsConnectionFactoryConfiguration() {
+		this.contextRunner.withClassLoader(new FilteredClassLoader(CachingConnectionFactory.class))
+				.withPropertyValues("spring.qpidjms.brokerUrl=amqp://localhost:5672", "spring.jms.cache.enabled=false")
+				.withUserConfiguration(TestConnectionDetailsConfiguration.class)
+				.run(context -> {
+					assertThat(context)
+							.hasSingleBean(QpidJmsConnectionDetails.class)
+							.doesNotHaveBean(QpidJmsAutoConfiguration.PropertiesQpidJmsConnectionDetails.class);
+					JmsConnectionFactory connectionFactory = context.getBean(JmsConnectionFactory.class);
+					assertThat(connectionFactory.getRemoteURI()).isEqualTo("amqp://localhost:5672");
+					assertThat(connectionFactory.getUsername()).isEqualTo("username");
+					assertThat(connectionFactory.getPassword()).isEqualTo("password");
+				});
+	}
+
+	@Test
 	void defaultPooledConnectionFactoryConfiguration() {
 		this.contextRunner.withUserConfiguration(EmptyConfiguration.class)
-				.withPropertyValues("spring.qpidjms.pool.enabled=true")
+				.withPropertyValues("spring.qpidjms.brokerUrl=amqp://localhost:5672",
+						"spring.qpidjms.pool.enabled=true")
 				.run(context -> {
 					assertThat(context)
 							.hasSingleBean(ConnectionFactory.class)
-							.hasSingleBean(JmsPoolConnectionFactory.class)
 							.hasBean("jmsConnectionFactory");
 					JmsPoolConnectionFactory connectionFactory = context.getBean(JmsPoolConnectionFactory.class);
 					assertThat(context.getBean("jmsConnectionFactory")).isSameAs(connectionFactory);
@@ -158,7 +144,8 @@ class QpidJmsAutoConfigurationTests {
 	@Test
 	void customPooledConnectionFactoryConfiguration() {
 		this.contextRunner.withUserConfiguration(EmptyConfiguration.class)
-				.withPropertyValues("spring.qpidjms.pool.enabled=true", "spring.qpidjms.pool.blockIfFull=false",
+				.withPropertyValues("spring.qpidjms.brokerUrl=amqp://localhost:5672",
+						"spring.qpidjms.pool.enabled=true", "spring.qpidjms.pool.blockIfFull=false",
 						"spring.qpidjms.pool.blockIfFullTimeout=64", "spring.qpidjms.pool.idleTimeout=512",
 						"spring.qpidjms.pool.maxConnections=256", "spring.qpidjms.pool.maxSessionsPerConnection=1024",
 						"spring.qpidjms.pool.timeBetweenExpirationCheck=2048",
@@ -166,7 +153,6 @@ class QpidJmsAutoConfigurationTests {
 				.run(context -> {
 					assertThat(context)
 							.hasSingleBean(ConnectionFactory.class)
-							.hasSingleBean(JmsPoolConnectionFactory.class)
 							.hasBean("jmsConnectionFactory");
 					JmsPoolConnectionFactory connectionFactory = context.getBean(JmsPoolConnectionFactory.class);
 					assertThat(context.getBean("jmsConnectionFactory")).isSameAs(connectionFactory);
@@ -183,11 +169,10 @@ class QpidJmsAutoConfigurationTests {
 	@Test
 	void cachingConnectionFactoryNotOnTheClasspathThenSimpleConnectionFactoryAutoConfigured() {
 		this.contextRunner.withClassLoader(new FilteredClassLoader(CachingConnectionFactory.class))
-				.withPropertyValues("spring.jms.cache.enabled=false")
+				.withPropertyValues("spring.qpidjms.brokerUrl=amqp://localhost:5672", "spring.jms.cache.enabled=false")
 				.run(context -> {
 					assertThat(context)
 							.hasSingleBean(ConnectionFactory.class)
-							.hasSingleBean(JmsConnectionFactory.class)
 							.hasBean("jmsConnectionFactory");
 					JmsConnectionFactory connectionFactory = context.getBean(JmsConnectionFactory.class);
 					assertThat(context.getBean("jmsConnectionFactory")).isSameAs(connectionFactory);
@@ -197,11 +182,8 @@ class QpidJmsAutoConfigurationTests {
 	@Test
 	void cachingConnectionFactoryNotOnTheClasspathAndCacheEnabledThenSimpleConnectionFactoryNotConfigured() {
 		this.contextRunner.withClassLoader(new FilteredClassLoader(CachingConnectionFactory.class))
-				.withPropertyValues("spring.jms.cache.enabled=true")
-				.run(context -> assertThat(context)
-						.doesNotHaveBean(ConnectionFactory.class)
-						.doesNotHaveBean(JmsConnectionFactory.class)
-						.doesNotHaveBean("jmsConnectionFactory"));
+				.withPropertyValues("spring.qpidjms.brokerUrl=amqp://localhost:5672", "spring.jms.cache.enabled=true")
+				.run(context -> assertThat(context).doesNotHaveBean(ConnectionFactory.class));
 	}
 
 	@Configuration(proxyBeanMethods = false)
@@ -215,7 +197,7 @@ class QpidJmsAutoConfigurationTests {
 		@Bean
 		QpidJmsConnectionFactoryCustomizer jmsConnectionFactoryCustomizer() {
 			return factory -> {
-				factory.setRemoteURI("amqp://127.0.0.1:5672");
+				factory.setRemoteURI("amqp://localhost:5672");
 				factory.setUsername("username");
 				factory.setPassword("password");
 			};
@@ -242,7 +224,7 @@ class QpidJmsAutoConfigurationTests {
 
 				@Override
 				public URI getBrokerUrl() {
-					return URI.create("amqp://127.0.0.1:5672");
+					return URI.create("amqp://localhost:5672");
 				}
 
 				@Override
