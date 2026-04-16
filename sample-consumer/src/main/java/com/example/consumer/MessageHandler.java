@@ -10,14 +10,9 @@ class MessageHandler {
 
 	private static final Logger logger = LogManager.getLogger();
 
-	@JmsListener(containerFactory = "queueJmsListenerContainerFactory", destination = "queue.1")
-	void handleQueueMessage(String message) {
-		logger.info("[queue.1] received message: {}", message);
-	}
-
-	@JmsListener(containerFactory = "topicJmsListenerContainerFactory", destination = "topic.1", subscription = "subscription.1")
-	void handleTopicMessage(String message) {
-		logger.info("[topic.1] received message: {}", message);
+	@JmsListener(destination = "sample.queue")
+	void handleMessage(String message) {
+		logger.info("received message: {}", message);
 	}
 
 }

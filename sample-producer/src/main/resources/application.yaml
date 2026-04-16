@@ -1,10 +1,8 @@
 spring:
   application:
     name: sample-producer
-  jms:
-    template:
-      session:
-        acknowledge-mode: '101'
+  qpidjms:
+    broker-url: amqp://localhost:5672
 ---
 spring:
   config:

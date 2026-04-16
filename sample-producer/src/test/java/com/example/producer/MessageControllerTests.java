@@ -13,7 +13,6 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.assertj.MockMvcTester;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
@@ -32,13 +31,13 @@ class MessageControllerTests {
 
 	@BeforeEach
 	void setUp() {
-		given(this.jmsClient.destination(anyString())).willReturn(this.operationSpec);
+		given(this.jmsClient.destination("sample.queue")).willReturn(this.operationSpec);
 	}
 
 	@Test
 	void givenValidRequestThenShouldReturnOk() {
 		// given
-		var request = post("/destination")
+		var request = post("/message")
 				.contentType(MediaType.APPLICATION_JSON)
 				.content("""
 						{

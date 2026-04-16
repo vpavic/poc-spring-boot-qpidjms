@@ -5,7 +5,7 @@
         "Name": "sbemulatorns",
         "Queues": [
           {
-            "Name": "queue.1",
+            "Name": "sample.queue",
             "Properties": {
               "DeadLetteringOnMessageExpiration": false,
               "DefaultMessageTimeToLive": "PT1H",
@@ -17,30 +17,6 @@
               "RequiresDuplicateDetection": false,
               "RequiresSession": false
             }
-          }
-        ],
-        "Topics": [
-          {
-            "Name": "topic.1",
-            "Properties": {
-              "DefaultMessageTimeToLive": "PT1H",
-              "DuplicateDetectionHistoryTimeWindow": "PT20S",
-              "RequiresDuplicateDetection": false
-            },
-            "Subscriptions": [
-              {
-                "Name": "subscription.1",
-                "Properties": {
-                  "DeadLetteringOnMessageExpiration": false,
-                  "DefaultMessageTimeToLive": "PT1H",
-                  "LockDuration": "PT1M",
-                  "MaxDeliveryCount": 3,
-                  "ForwardDeadLetteredMessagesTo": "",
-                  "ForwardTo": "",
-                  "RequiresSession": false
-                }
-              }
-            ]
           }
         ]
       }
