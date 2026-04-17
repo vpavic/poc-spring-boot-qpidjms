@@ -24,3 +24,11 @@ spring:
   qpidjms:
     username: guest
     password: guest
+---
+spring:
+  config:
+    activate:
+      on-profile: artemis
+  qpidjms:
+    username: artemis
+    password: artemis
