@@ -3,7 +3,7 @@ services:
   servicebus:
     image: mcr.microsoft.com/azure-messaging/servicebus-emulator:2.0.0
     volumes:
-      - ./etc/azure/servicebus-config.json:/ServiceBus_Emulator/ConfigFiles/Config.json
+      - ./etc/azure-servicebus/config.json:/ServiceBus_Emulator/ConfigFiles/Config.json
     ports:
       - ${AZURE_SERVICEBUS_AMQP_PORT:-5672}:5672
       - ${AZURE_SERVICEBUS_HTTP_PORT:-5300}:5300
