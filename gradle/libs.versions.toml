@@ -13,10 +13,10 @@ mockito-core = { module = "org.mockito:mockito-core" }
 nullaway = { module = "com.uber.nullaway:nullaway", version.ref = "nullaway" }
 pooled-jms = { module = "org.messaginghub:pooled-jms" }
 qpid-jms-client = { module = "org.apache.qpid:qpid-jms-client", version.ref = "qpid-jms" }
-spring-boot-autoconfigure = { module = "org.springframework.boot:spring-boot-autoconfigure", version.ref = "spring-boot" }
+spring-boot-autoconfigure = { module = "org.springframework.boot:spring-boot-autoconfigure" }
 spring-boot-configuration-processor = { module = "org.springframework.boot:spring-boot-configuration-processor" }
 spring-boot-dependencies = { module = "org.springframework.boot:spring-boot-dependencies", version.ref = "spring-boot" }
-spring-boot-jms = { module = "org.springframework.boot:spring-boot-jms", version.ref = "spring-boot" }
+spring-boot-jms = { module = "org.springframework.boot:spring-boot-jms" }
 spring-boot-starter-jms = { module = "org.springframework.boot:spring-boot-starter-jms" }
 spring-boot-starter-jms-test = { module = "org.springframework.boot:spring-boot-starter-jms-test" }
 spring-boot-starter-webmvc = { module = "org.springframework.boot:spring-boot-starter-webmvc" }
