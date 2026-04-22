@@ -7,7 +7,7 @@ import org.springframework.boot.autoconfigure.service.connection.ConnectionDetai
 
 public interface QpidJmsConnectionDetails extends ConnectionDetails {
 
-	@Nullable URI getBrokerUrl();
+	URI getBrokerUrl();
 
 	@Nullable String getUsername();
 
