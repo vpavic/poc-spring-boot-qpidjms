@@ -13,9 +13,10 @@ spring:
   config:
     activate:
       on-profile: rabbitmq
-  qpidjms:
-    username: guest
-    password: guest
+  docker:
+    compose:
+      file: compose-rabbitmq.yaml
+      lifecycle-management: none
 ---
 spring:
   config:

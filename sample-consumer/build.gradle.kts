@@ -5,6 +5,8 @@ plugins {
 dependencies {
 	implementation(project(":spring-boot-qpidjms"))
 	implementation(libs.spring.boot.starter.jms)
+
+	developmentOnly(libs.spring.boot.docker.compose)
 }
 
 testing {

@@ -16,6 +16,7 @@ qpid-jms-client = { module = "org.apache.qpid:qpid-jms-client", version.ref = "q
 spring-boot-autoconfigure = { module = "org.springframework.boot:spring-boot-autoconfigure" }
 spring-boot-configuration-processor = { module = "org.springframework.boot:spring-boot-configuration-processor" }
 spring-boot-dependencies = { module = "org.springframework.boot:spring-boot-dependencies", version.ref = "spring-boot" }
+spring-boot-docker-compose = { module = "org.springframework.boot:spring-boot-docker-compose" }
 spring-boot-jms = { module = "org.springframework.boot:spring-boot-jms" }
 spring-boot-starter-jms = { module = "org.springframework.boot:spring-boot-starter-jms" }
 spring-boot-starter-jms-test = { module = "org.springframework.boot:spring-boot-starter-jms-test" }

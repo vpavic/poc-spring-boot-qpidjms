@@ -6,6 +6,8 @@ dependencies {
 	implementation(project(":spring-boot-qpidjms"))
 	implementation(libs.spring.boot.starter.jms)
 	implementation(libs.spring.boot.starter.webmvc)
+
+	developmentOnly(libs.spring.boot.docker.compose)
 }
 
 testing {
