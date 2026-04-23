@@ -1,7 +1,7 @@
 name: rabbitmq
 services:
   rabbitmq:
-    image: rabbitmq:4.2.5-management-alpine
+    image: rabbitmq:4.3.0-management-alpine
     volumes:
       - ./etc/rabbitmq/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf
       - ./etc/rabbitmq/definitions.json:/etc/rabbitmq/definitions.json
