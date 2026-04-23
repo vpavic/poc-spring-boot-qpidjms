@@ -2,7 +2,7 @@
 errorprone = "2.49.0"
 nullaway = "0.13.4"
 qpid-jms = "2.10.0"
-spring-boot = "4.0.5"
+spring-boot = "4.0.6"
 
 [libraries]
 assertj-core = { module = "org.assertj:assertj-core" }
