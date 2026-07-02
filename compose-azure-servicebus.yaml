@@ -1,7 +1,7 @@
 name: azure-servicebus
 services:
   servicebus:
-    image: mcr.microsoft.com/azure-messaging/servicebus-emulator:2.0.0
+    image: mcr.microsoft.com/azure-messaging/servicebus-emulator:2.0.1
     volumes:
       - ./etc/azure-servicebus/config.json:/ServiceBus_Emulator/ConfigFiles/Config.json
     ports:
